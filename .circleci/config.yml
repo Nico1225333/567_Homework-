@@ -1,0 +1,22 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+      - run:
+          name: Install requests
+          command: python -m pip install requests
+      - run:
+          name: Run Triangle tests
+          command: python -m unittest discover -s GitHubApi567-HW03a -p "Triangle.py" -v
+      - run:
+          name: Run GitHub API tests
+          command: python -m unittest discover -s GitHubApi567-HW03a -p "test_*.py" -v
+
+workflows:
+  run_tests:
+    jobs:
+      - test
