@@ -1,11 +1,16 @@
+"""Classify triangles and test the results."""
+
 import unittest
+from io import StringIO
+from unittest.mock import patch
 
-def classifyTriangle(a,b,c):
 
+def classify_triangle(a, b, c):
+    """Return the triangle type for three side lengths."""
     if a + b <= c or a + c <= b or b + c <= a:
         return 'NotATriangle'
 
-    if a == b and b == c:
+    if a == b == c:
         return 'Equilateral'
 
     if a**2 + b**2 == c**2 or a**2 + c**2 == b**2 or b**2 + c**2 == a**2:
@@ -17,26 +22,36 @@ def classifyTriangle(a,b,c):
     return 'Scalene'
 
 
-def runClassifyTriangle(a, b, c):
-    """ invoke classifyTriangle with the specified arguments and print the result """
-    print('classifyTriangle(',a, ',', b, ',', c, ')=',classifyTriangle(a,b,c),sep="")
+def run_classify_triangle(a, b, c):
+    """Print the triangle classification."""
+    print(f'classifyTriangle({a},{b},{c})={classify_triangle(a, b, c)}')
 
 
 class TestTriangles(unittest.TestCase):
+    """Test triangle classifications and printed output."""
 
-    def testSet1(self):
-        self.assertEqual(classifyTriangle(3,4,5),'Right')
-        self.assertEqual(classifyTriangle(1,2,3),'NotATriangle')
+    def test_set_1(self):
+        """Check right triangles and invalid triangles."""
+        self.assertEqual(classify_triangle(3, 4, 5), 'Right')
+        self.assertEqual(classify_triangle(1, 2, 3), 'NotATriangle')
 
-    def testMyTestSet2(self):
-        self.assertEqual(classifyTriangle(1,1,1),'Equilateral')
-        self.assertEqual(classifyTriangle(5,5,8),'Isoceles')
-        self.assertEqual(classifyTriangle(4,5,6),'Scalene')
+    def test_set_2(self):
+        """Check equilateral, isosceles, and scalene triangles."""
+        self.assertEqual(classify_triangle(1, 1, 1), 'Equilateral')
+        self.assertEqual(classify_triangle(5, 5, 8), 'Isoceles')
+        self.assertEqual(classify_triangle(4, 5, 6), 'Scalene')
+
+    def test_print_output(self):
+        """Check the text printed by the helper function."""
+        with patch('sys.stdout', new_callable=StringIO) as output:
+            run_classify_triangle(3, 4, 5)
+            self.assertEqual(
+                output.getvalue(),
+                'classifyTriangle(3,4,5)=Right\n'
+            )
 
 
 if __name__ == '__main__':
-
-    runClassifyTriangle(1,2,3)
-    runClassifyTriangle(1,1,1)
-
+    run_classify_triangle(1, 2, 3)
+    run_classify_triangle(1, 1, 1)
     unittest.main(exit=False)
